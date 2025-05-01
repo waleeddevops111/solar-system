@@ -26,4 +26,9 @@ jobs:
           run: npm install
         - name: Run test
           run: npm test
+        - name: test results file using artifact
+          uses: actions/upload-artifact@v4
+          with:
+           name: mocha-test-results
+           path: test-results.xml
           
