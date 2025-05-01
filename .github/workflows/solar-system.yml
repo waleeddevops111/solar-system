@@ -37,6 +37,6 @@ jobs:
         - name: test results file using artifact
           uses: actions/upload-artifact@v4
           with:
-           name: mocha-test-results-v2
-           path: test-results-v2.xml
+           name: mocha-test-results
+           path: test-results.xml
           
