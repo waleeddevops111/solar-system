@@ -1,0 +1,29 @@
+name: Workflows implementaion
+on:
+    workflow_dispatch: 
+    push: 
+        branches:
+         - main
+         - 'feature/*'
+env: 
+
+    MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+    MONGO_USERNAME: ${{vars.MONGO_USERNAME}}
+    MONGO_PASSWORD: ${{secrets.MONGO_PASSWORD}}
+
+jobs:
+    unit-testing:
+        name: Unit testing
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+        - name: Set up node js env
+          uses: actions/setup-node@v4
+          with: 
+           node-version: '18'
+        - name: install dependencies
+          run: npm install
+        - name: Run test
+          run: npm test
+          
