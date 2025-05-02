@@ -73,6 +73,20 @@ jobs:
               name: code-coverage-results
               path: coverage
               retention-days: 3
+    docker:
+        name: For docker login
+        needs: [unit-testing, coverage]
+        runs-on: ubuntu-latest
+        steps:
+          - name: Login to Docker Hub
+            id: login-status
+            uses: docker/login-action@v3
+            with:
+             username: ${{ vars.DOCKERHUB_USERNAME }}
+             password: ${{ secrets.DOCKERHUB_TOKEN }}
+          - name: login status check
+            if: steps.login-status.outcome == 'success'
+            run: echo "Login is Successful"
 
 
 
