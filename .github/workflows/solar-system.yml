@@ -87,6 +87,8 @@ jobs:
           - name: login status check
             if: steps.login-status.outcome == 'success'
             run: echo "Login is Successful"
+          - name: checkout rep
+            uses: actions/checkout@v4
           - name: Build docker image
             uses: docker/build-push-action@v6
             with:
