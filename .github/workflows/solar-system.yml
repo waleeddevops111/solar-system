@@ -33,8 +33,10 @@ jobs:
         - name: install dependencies
           run: npm install
         - name: Run test
+          id: nodejs-unit-testing-step
           run: npm test
         - name: test results file using artifact
+          if: steps.nodejs-unit-testing-step.outcome == 'success' || steps.nodejs-unit-testing-step.outcome == 'failure'
           uses: actions/upload-artifact@v4
           with:
            name: new-test-results
