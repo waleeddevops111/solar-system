@@ -106,7 +106,7 @@ jobs:
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
 
              echo "Testing image using wget"
-             wget -q -O 127.0.0.1:3000/live grep live
+             curl -q -O 127.0.0.1:3000/live grep live
 
 
 
