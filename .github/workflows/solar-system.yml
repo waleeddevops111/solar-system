@@ -37,6 +37,29 @@ jobs:
         - name: test results file using artifact
           uses: actions/upload-artifact@v4
           with:
-           name: mocha-test-results
-           path: test-results.xml
+           name: new-test-results
+           path: new-test-results.xml
+
+    coverage:
+        name: Code Coverage
+        runs-on: ubuntu-latest
+        steps:
+          - name: checkout rep
+            uses: actions/checkout@v4
+          - name: Set up node js environment
+            uses: actions/setup-node@v4
+          - name: install dependencies
+            run: npm install
+          - name: check code coverage
+            run: npm run coverage
+          - name: coverage results
+            uses: actions/upload-artifact@v4
+            with:
+              name: code-coverage-results
+              path: coverage
+              retention-days: 3
+
+
+
+
           
