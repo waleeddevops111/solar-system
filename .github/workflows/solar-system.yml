@@ -76,6 +76,8 @@ jobs:
     docker:
         name: For docker login
         needs: [unit-testing, coverage]
+        permissions: 
+          packages: write
         runs-on: ubuntu-latest
         steps:
           - name: Login to Docker Hub
@@ -84,6 +86,13 @@ jobs:
             with:
              username: ${{ vars.DOCKERHUB_USERNAME }}
              password: ${{ secrets.DOCKERHUB_TOKEN }}
+          - name: GHCR LOGIN
+            id: ghcr-status
+            uses: docker/login-action@v3
+            with:
+              registery: ghcr.io
+              username: ${{ github.repository_owner }}
+              password: ${{ secrets.GITHUB_TOKEN }}
           - name: login status check
             if: steps.login-status.outcome == 'success'
             run: echo "Login is Successfull"
@@ -108,13 +117,16 @@ jobs:
 
              echo "Testing image using wget"
              wget -q -O - 127.0.0.1:3000/live | grep live
-          - name: Docker push
+          - name: Container Registery Push
             if: success()
             uses: docker/build-push-action@v6
             with:
               context: .
               push: true
-              tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
+              tags: | 
+                ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
+                ghcr.io/${{github.repository_owner}}/solar-system:latest
+
 
 
 
