@@ -2,7 +2,8 @@ name: Workflows implementaion
 on:
     workflow_dispatch: 
     push: 
-
+permissions:
+    packages: write
 env: 
 
     MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
