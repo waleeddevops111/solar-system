@@ -15,7 +15,7 @@ jobs:
        uses: ./.github/workflows/unit-testing-reusable.yml
        with:
         node-version: "[\"18\", \"20\"]"
-        os: ubuntu:latest
+        os: '["ubuntu-latest"]'
 
     coverage:
         name: Code Coverage
