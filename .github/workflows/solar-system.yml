@@ -68,7 +68,6 @@ jobs:
           with:
              name: coverage-results
 
-
         - name: Merge test files
           run: |
               mkdir reports-${{ github.sha }}/
