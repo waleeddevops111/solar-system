@@ -99,71 +99,33 @@ jobs:
         needs: [unit-testing, coverage]
         permissions: 
           packages: write
-        runs-on: ubuntu-latest
-        steps:
-          - name: Login to Docker Hub
-            id: login-status
-            uses: docker/login-action@v3
-            with:
-             username: ${{ vars.DOCKERHUB_USERNAME }}
-             password: ${{ secrets.DOCKERHUB_TOKEN }}
-          - name: GHCR LOGIN
-            id: ghcr-status
-            uses: docker/login-action@v3
-            with:
-              registry: ghcr.io
-              username: ${{ github.repository_owner }}
-              password: ${{ secrets.GITHUB_TOKEN }}
-          - name: login status check
-            if: steps.login-status.outcome == 'success'
-            run: echo "Login is Successfull"
-          - name: checkout rep
-            uses: actions/checkout@v4
-          - name: Build docker image
-            uses: docker/build-push-action@v6
-            with:
-              context: .
-              push: false
-              tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
-          - name: Testing docker image
-            id: docker-test
-            run: |
-             docker images 
-             docker run --name solar-system-app -d \
-              -p 3000:3000 \
-              -e MONGO_URI=$MONGO_URI \
-              -e MONGO_USERNAME=$MONGO_USERNAME \
-              -e MONGO_PASSWORD=$MONGO_PASSWORD \
-              ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
+        uses: ./.github/workflows/docker-resusable.yml
+        with:
+          DOCKERHUB_USERNAME: devopswaleed
+        secrets:
+          DOCKERHUB_TOKEN:  ${{secrets.DOCKERHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-             echo "Testing image using wget"
-             wget -q -O - 127.0.0.1:3000/live | grep live
-          - name: Container Registery Push
-            if: success()
-            uses: docker/build-push-action@v6
-            with:
-              context: .
-              push: true
-              tags: | 
-                ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
-                ghcr.io/${{github.repository_owner}}/solar-system:latest
 
-    dev-deploy:
-      needs: docker
-      runs-on: ubuntu-latest
-      steps:
-        - name: checkout repo  
-          uses: actions/checkout@v4
-        - name: setup kubectl cli 
-          uses: azure/setup-kubectl@v4
-          with:
-           version: 'v1.26.0' 
-        - name: Fetch kubernetes cluster details
-          run: |
-            kubectl version --short
-            echo -------------------------
-            kubectl get nodes
-            
+
+#          deploy:
+#      needs: docker
+#      runs-on: ubuntu:latest
+#      steps:
+        # - name: checkout repo
+        #   uses: actions/checkout@v4
+        # - name: install kubectl
+        #   uses: azure/setup-kubectl@v4
+        #   with:
+        #    version: 'v1.26.0' 
+        #    id: install  
+        # - name: set kubeconfig
+        #   uses: azure/k8s-set-context@v4
+        #   with:
+        #     method: kubeconfig
+        #     kubeconfig: <your kubeconfig>
+           
+
 
 
 
