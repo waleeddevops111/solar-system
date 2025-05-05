@@ -36,8 +36,8 @@ jobs:
         steps:
         - name: Debug inputs
           run: |
-              echo "Node Version: ${{ fromJSON(inputs.node-version) }}"
-              echo "OS: ${{ fromJSON(inputs.os }}"
+              echo "Node Version: ${{ matrix.node-version }}"
+              echo "OS: ${{ matrix.os }}"
         - name: Checkout repository using action
           uses: actions/checkout@v4
         - name: Set up node js env
