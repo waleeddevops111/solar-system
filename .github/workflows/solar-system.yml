@@ -50,9 +50,32 @@ jobs:
           - name: coverage results
             uses: actions/upload-artifact@v4
             with:
-              name: code-coverage-results
+              name: coverage-results
               path: coverage
               retention-days: 3
+    report-s3:
+      name: upload reports to aws
+      needs: [unit-testing, coverage]
+      runs-on: ubuntu-latest
+      steps:
+        - name: download the unit-testing artifact
+          uses: actions/download-artifact@v4
+          with:
+              name: unit-results 
+
+        - name: download the coverage artifact
+          uses: actions/download-artifact@v4
+          with:
+             name: coverage-results
+
+        - name: Merge test files
+          run: |
+              mkdir reports-${{ github.sha }}/
+              mv unit-test-results.xml reports-${{ github.sha }} /
+              mv coverage-results.xml reports-${{ github.sha }}/
+              ls -ltr reports-${{ github.sha }}/
+        - name: Uploading to aws
+          run: echo "Uploadingggggg"
     docker:
      
         name: Docker Job Reusable
