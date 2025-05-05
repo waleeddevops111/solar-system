@@ -98,12 +98,13 @@ jobs:
      
         name: Docker Job Reusable
         needs: [unit-testing, coverage]
-        uses: ./.github/workflows/docker-build-publish.yml
+        uses: ./.github/workflows/resusable-workflow.yml
         with:
           image-name: solar-system
           docker-context: .
         secrets:
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          
     
 
     dev-deploy:
