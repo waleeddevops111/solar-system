@@ -9,9 +9,7 @@ on:
       DOCKERHUB_TOKEN:
         description: for docker login
         required: true
-      GITHUB_TOKEN:
-        description: for ghcr login
-        required: true
+
 
 
 jobs: 
