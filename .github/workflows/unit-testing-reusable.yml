@@ -1,0 +1,59 @@
+name: Reusable workflow for unit-testing
+on: 
+   workflow_call:
+      inputs:
+        node-version:
+          required: true
+          type: string
+        os:
+            required: true
+            type: string
+
+        
+
+jobs:
+    reusable-unit-testing:
+        name: Unit testing
+        services:
+          mongo-db:
+            image: siddharth67/mongo-db:non-prod
+            ports:
+              - 27017:27017
+        env: 
+
+         MONGO_URI: 'mongodb://localhost:27017/superData'
+         MONGO_USERNAME: non-prod-user 
+         MONGO_PASSWORD: non-prod-password
+        strategy:
+            matrix:
+                node-version: ${{ fromJSON(inputs.node-versions) }}
+                os: ${{ fromJson(inputs.os)}}
+                #exclude:
+                    #- node-version: 18
+                      #os: macos-latest 
+
+        runs-on: ${{matrix.os}}
+        steps:
+        - name: Checkout repository using action
+          uses: actions/checkout@v4
+        - name: Set up node js env
+          uses: actions/setup-node@v4
+          with: 
+           node-version: ${{matrix.node-version}}
+        - name: Cache NPM Dependencies
+          id: cache-npm
+          uses: actions/cache@v4
+          with:
+            path: node_modules
+            key: ${{ runner.os }}-node_modules-${{hashFiles('package-lock.json')}}
+        - name: install dependencies
+          run: npm install
+        - name: Run test
+          id: nodejs-unit-testing-step
+          run: npm test
+        - name: test results file using artifact
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+           name: new-test-results
+           path: new-test-results.xml
