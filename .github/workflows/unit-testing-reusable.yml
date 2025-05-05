@@ -26,14 +26,18 @@ jobs:
          MONGO_PASSWORD: non-prod-password
         strategy:
             matrix:
-                node-version: ${{ fromJSON(inputs.node-versions) }}
-                os: ${{ fromJson(inputs.os)}}
+                node-version: ${{ fromJSON(inputs.node-version) }}
+                os: ${{ fromJSON(inputs.os) }}
                 #exclude:
                     #- node-version: 18
                       #os: macos-latest 
 
         runs-on: ${{matrix.os}}
         steps:
+        - name: Debug inputs
+          run: |
+              echo "Node Version: ${{ fromJSON(inputs.node-version) }}"
+              echo "OS: ${{ fromJSON(inputs.os }}"
         - name: Checkout repository using action
           uses: actions/checkout@v4
         - name: Set up node js env
