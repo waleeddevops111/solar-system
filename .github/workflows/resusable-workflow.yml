@@ -1,0 +1,82 @@
+# .github/workflows/docker-build-publish.yml
+name: Docker Build and Publish
+
+on:
+  workflow_call:
+    inputs:
+      image-name:
+        required: true
+        type: string
+      docker-context:
+        required: false
+        default: .
+        type: string
+    secrets:
+      DOCKERHUB_TOKEN:
+        required: true
+
+jobs:
+  docker:
+    name: Docker Build and Push
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    env:
+      MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+      MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
+      MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+
+    steps:
+      - name: Login to Docker Hub
+        id: login-status
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GHCR
+        id: ghcr-status
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login status check
+        if: steps.login-status.outcome == 'success'
+        run: echo "Login is Successful"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ inputs.docker-context }}
+          push: false
+          tags: |
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:latest
+
+      - name: Test Docker image
+        id: docker-test
+        run: |
+          docker images
+          docker run --name test-container -d \
+            -p 3000:3000 \
+            -e MONGO_URI=$MONGO_URI \
+            -e MONGO_USERNAME=$MONGO_USERNAME \
+            -e MONGO_PASSWORD=$MONGO_PASSWORD \
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:latest
+
+          echo "Testing image using wget"
+          wget -q -O - 127.0.0.1:3000/live | grep live
+
+      - name: Push Docker image
+        if: success()
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ inputs.docker-context }}
+          push: true
+          tags: |
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:latest
+            ghcr.io/${{ github.repository_owner }}/${{ inputs.image-name }}:latest
