@@ -55,13 +55,10 @@ jobs:
               retention-days: 3
     report-s3:
       name: upload reports to aws
-      needs: [unit-testing, coverage]
+      needs: coverage
       runs-on: ubuntu-latest
       steps:
-        - name: download the unit-testing artifact
-          uses: actions/download-artifact@v4
-          with:
-              name: new-test-results
+
 
         - name: download the coverage artifact
           uses: actions/download-artifact@v4
@@ -71,7 +68,6 @@ jobs:
         - name: Merge test files
           run: |
               mkdir reports-${{ github.sha }}/
-              mv new-test-results.xml reports-${{ github.sha }} /
               mv coverage-results.xml reports-${{ github.sha }}/
               ls -ltr reports-${{ github.sha }}/
         - name: Uploading to aws
