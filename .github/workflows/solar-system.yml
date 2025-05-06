@@ -68,8 +68,8 @@ jobs:
         - name: Merge test files
           run: |
                mkdir reports-${{ github.sha }}/
-               mv unit-test-results.xml reports-${{ github.sha }}/ || echo "unit-test-results.xml not found"
-               mv coverage/lcov.info reports-${{ github.sha }}/ || echo "lcov.info not found"
+               mv unit-test-results.xml reports-${{ github.sha }}/ || echo "unit testing file not found"
+               mv cobertura-coverage.xml reports-${{ github.sha }}/ || echo "coverage file not found"
                ls -ltr reports-${{ github.sha }}/
         - name: Uploading to aws
           uses: jakejarvis/s3-sync-action@master
