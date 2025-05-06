@@ -1,7 +1,7 @@
 name: 'Custom action'
 description: 'For cache dependencies and install dependencies'
 inputs:
-    npm-path:  # id of input
+    path-of-folder:  # id of input
       description: 'path for cache dependencies'
       required: true
 
@@ -14,8 +14,8 @@ runs:
       id: cache-npm
       uses: actions/cache@v4
       with:
-        path: ${{inputs.npm-path}}
-        key: ${{ runner.os }}-${{inputs.npm-path}}-${{hashFiles('package-lock.json')}}
+        path: ${{ inputs.path-of-folder }}
+        key: ${{ runner.os }}-${{ inputs.path-of-folder }}-${{hashFiles('package-lock.json')}}
     - name: install dependencies
       run: npm install
       shell: bash

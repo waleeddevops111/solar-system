@@ -38,6 +38,9 @@ jobs:
           run: |
               echo "Node Version: ${{ matrix.node-version }}"
               echo "OS: ${{ matrix.os }}"
+        
+        - name: Checkout repository
+          uses: actions/checkout@v4
         - name: for cache and install dependencies
           uses: ./.github/workflows/custom-actions/npm-action
           with:
