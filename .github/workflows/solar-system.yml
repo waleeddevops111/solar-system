@@ -72,9 +72,8 @@ jobs:
                mv coverage/lcov.info reports-${{ github.sha }}/ || echo "lcov.info not found"
                ls -ltr reports-${{ github.sha }}/
         - name: Uploading to aws
-          uses: |
-                actions/checkout@master
-                jakejarvis/s3-sync-action@master
+          uses: jakejarvis/s3-sync-action@master
+              
           with:
             args: --acl public-read --follow-symlinks --delete
           env:
