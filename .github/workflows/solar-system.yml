@@ -38,6 +38,8 @@ jobs:
           #   uses: actions/setup-node@v4
           - name: for cache and install dependencies
             uses: ./.github/workflows/custom-actions/npm-action
+            with:
+              npm-path: node_modules
           - name: check code coverage
             continue-on-error: true
             run: npm run coverage

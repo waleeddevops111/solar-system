@@ -40,8 +40,8 @@ jobs:
               echo "OS: ${{ matrix.os }}"
         - name: for cache and install dependencies
           uses: ./.github/workflows/custom-actions/npm-action
-        - name: install dependencies
-          run: npm install
+          with:
+              npm-path: node_modules
         - name: Run test
           id: nodejs-unit-testing-step
           run: npm test
