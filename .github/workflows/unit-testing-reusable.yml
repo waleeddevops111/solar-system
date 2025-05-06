@@ -44,7 +44,7 @@ jobs:
         - name: for cache and install dependencies
           uses: ./.github/workflows/custom-actions/npm-action
           with:
-              npm-path: node_modules
+              path-of-folder: node_modules
         - name: Run test
           id: nodejs-unit-testing-step
           run: npm test
