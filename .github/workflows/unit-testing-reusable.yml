@@ -38,18 +38,8 @@ jobs:
           run: |
               echo "Node Version: ${{ matrix.node-version }}"
               echo "OS: ${{ matrix.os }}"
-        - name: Checkout repository using action
-          uses: actions/checkout@v4
-        - name: Set up node js env
-          uses: actions/setup-node@v4
-          with: 
-           node-version: ${{matrix.node-version}}
-        - name: Cache NPM Dependencies
-          id: cache-npm
-          uses: actions/cache@v4
-          with:
-            path: node_modules
-            key: ${{ runner.os }}-node_modules-${{hashFiles('package-lock.json')}}
+        - name: for cache and install dependencies
+          uses: ./.github/workflows/custom-actions/npm-action
         - name: install dependencies
           run: npm install
         - name: Run test

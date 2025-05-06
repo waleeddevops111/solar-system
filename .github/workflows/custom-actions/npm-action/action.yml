@@ -1,0 +1,21 @@
+name: 'Custom action'
+description: 'For cache dependencies and install dependencies'
+inputs:
+    npm-path:  # id of input
+      description: 'path for cache dependencies'
+      required: true
+
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Cache NPM Dependencies
+      id: cache-npm
+      uses: actions/cache@v4
+      with:
+        path: ${{inputs.npm-path}}
+        key: ${{ runner.os }}-${{inputs.npm-path}}-${{hashFiles('package-lock.json')}}
+    - name: install dependencies
+      run: npm install
+      shell: bash
