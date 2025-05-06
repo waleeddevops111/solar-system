@@ -58,7 +58,7 @@ jobs:
 
         - name: Run tests
           run: |
-            echo "<test>Passed</test>" > first-test-result.xml
+            echo "<test>Passed</test>" > first-test-results.xml
         
         - name: test results file using artifact
           if: always()
