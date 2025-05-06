@@ -68,7 +68,7 @@ jobs:
         - name: Merge test files
           run: |
               mkdir reports-${{ github.sha }}/
-              mv coverage-results.xml reports-${{ github.sha }}/
+              mv coverage/coverage-results.xml reports-${{ github.sha }}/
               ls -ltr reports-${{ github.sha }}/
         - name: Uploading to aws
           run: echo "Uploadingggggg"
