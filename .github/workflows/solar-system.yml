@@ -51,7 +51,7 @@ jobs:
             uses: actions/upload-artifact@v4
             with:
               name: coverage-results
-              path: coverage/
+              path: coverage
               retention-days: 3
     report-s3:
       name: upload reports to aws
